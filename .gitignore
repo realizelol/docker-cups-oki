@@ -1,0 +1,4 @@
+.github
+/img
+/img/*
+/qemu-*-static
