@@ -37,21 +37,6 @@ RUN pacman --noconfirm --needed -Sy \
  && pacman --noconfirm -Sc \
  && rm /var/lib/pacman/sync/*
 
-# Add OKI queue
-#RUN wget -q https://raw.githubusercontent.com/rbalint/printer-driver-oki/master/filters/okijobaccounting \
-#    -O /usr/lib/cups/filter/okijobaccounting | grep -v "SSL_INIT"
-#RUN chmod 755 /usr/lib/cups/filter/okijobaccounting
-#RUN wget -q https://raw.githubusercontent.com/rbalint/printer-driver-oki/master/filters/rastertookidotmatrix \
-#    -O /usr/lib/cups/filter/rastertookidotmatrix | grep -v "SSL_INIT"
-#RUN chmod 755 /usr/lib/cups/filter/rastertookidotmatrix
-#RUN wget -q https://raw.githubusercontent.com/rbalint/printer-driver-oki/master/filters/rastertookimonochrome \
-#    -O /usr/lib/cups/filter/rastertookimonochrome | grep -v "SSL_INIT"
-#RUN chmod 755 /usr/lib/cups/filter/rastertookimonochrome
-# Add OKI MC361 / MC561 / CX2731 driver
-#RUN wget -q https://raw.githubusercontent.com/rbalint/printer-driver-oki/master/MFP/color/desktop/MC361/ok361u1.ppd \
-#    -O /usr/share/ppd/ok361u1.ppd | grep -v "SSL_INIT"
-#RUN chmod 644 /usr/share/ppd/ok361u1.ppd
-
 # Add OKI PostScript printer queue
 ADD drivers/okijobaccounting /usr/lib/cups/filter/okijobaccounting
 RUN chmod 755 /usr/lib/cups/filter/okijobaccounting
