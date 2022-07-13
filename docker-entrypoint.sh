@@ -6,10 +6,12 @@ if [[ ! -f /etc/cups/cupsd.conf ]]; then
   cp -rpn /etc/cups-skel/* /etc/cups/
 fi
 
-# update packages
-pacman -Syy  --noconfirm
-pacman -Syyu --noconfirm
-pacman -Fyy  --noconfirm
+# update packages if connected to www
+if ping -c3 -W3 archlinux.org &>/dev/null; then
+  pacman -Syy  --noconfirm
+  pacman -Syyu --noconfirm
+  pacman -Fyy  --noconfirm
+fi
 
 # fix papersize
 echo 'a4' > /etc/papersize
