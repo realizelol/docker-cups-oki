@@ -67,8 +67,8 @@ VOLUME ["/etc/cups"]
 # ports
 EXPOSE 631/tcp 631/udp
 
-# healthcheck
-HEALTHCHECK CMD ${PREFIX}/docker-healthcheck.sh
+# healthcheck every 60mins (default=30s)
+HEALTHCHECK --interval=60m --timeout=10s --start-period=30s --retries=1 CMD ${PREFIX}/docker-healthcheck.sh
 
 # entrypoint
 ENTRYPOINT ${PREFIX}/docker-entrypoint.sh /usr/sbin/cupsd -f
