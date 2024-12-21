@@ -5,12 +5,12 @@ ARG ARCH=amd64
 FROM archlinux:latest
 
 # environment
-ENV CUPS_USER_ADMIN=admin
-ENV CUPS_USER_PASSWORD=admin
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PREFIX=/usr/local/bin
-ENV LANG=en_US.UTF-8
-ENV PRINTER_DRIVERS=
+ENV CUPS_USER_ADMIN="admin"
+ENV CUPS_USER_PASSWORD="admin"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV PREFIX="/usr/local/bin"
+ENV LANG="en_US.UTF-8"
+ENV PRINTER_DRIVERS=""
 # printer drivers (seperate by "," e.g. foomatic-db,footmatic-db-engine,footmatic-db-nonfree):
 # foomatic-db foomatic-db-engine foomatic-db-gutenprint-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds foomatic-db-ppds gutenprint hplip splix
 
@@ -22,8 +22,8 @@ LABEL maintainer="realizelol" \
   org.label-schema.version="2.4.2" \
   org.label-schema.url="https://hub.docker.com/r/realizelol/cups-oki" \
   org.label-schema.vcs-url="https://github.com/realizelol/docker-cups-oki" \
-  org.label-schema.vcs-ref=$VCS_REF \
-  org.label-schema.build-date=$BUILD_DATE
+  org.label-schema.vcs-ref="${VCS_REF}" \
+  org.label-schema.build-date="${BUILD_DATE}"
 
 # Prepare ENV
 RUN locale-gen && \
@@ -33,7 +33,7 @@ RUN locale-gen && \
 # Install cups
 RUN pacman --noconfirm --needed -Sy \
  && pacman --noconfirm --needed -S cups libcups cups-filters cups-pdf ghostscript gsfonts samba expect sudo wget \
-    $(for PDRV in $(echo ${PRINTER_DRIVERS} | sed 's/,/ /g'); do echo "${PDRV}"; done) \
+    $(for PDRV in $(echo "${PRINTER_DRIVERS}" | sed 's/,/ /g'); do echo "${PDRV}"; done) \
  && pacman --noconfirm -Sc \
  && rm /var/lib/pacman/sync/*
 
@@ -46,9 +46,9 @@ ADD drivers/ok361u1.ppd /usr/share/ppd/ok361u1.ppd
 RUN chmod 644 /usr/share/ppd/ok361u1.ppd
 
 # copy scripts
-COPY docker-entrypoint.sh ${PREFIX}/docker-entrypoint.sh
-COPY docker-healthcheck.sh ${PREFIX}/docker-healthcheck.sh
-RUN  chmod +x ${PREFIX}/docker-*.sh
+COPY docker-entrypoint.sh "${PREFIX}/docker-entrypoint.sh"
+COPY docker-healthcheck.sh "${PREFIX}/docker-healthcheck.sh"
+RUN  chmod +x "${PREFIX}"/docker-*.sh
 
 # copy /etc/cups for skeleton usage
 RUN cp -rp /etc/cups /etc/cups-skel
@@ -68,7 +68,7 @@ VOLUME ["/etc/cups"]
 EXPOSE 631/tcp 631/udp
 
 # healthcheck every 60mins (default=30s)
-HEALTHCHECK --interval=60m --timeout=10s --start-period=30s --retries=1 CMD ${PREFIX}/docker-healthcheck.sh
+HEALTHCHECK --interval=60m --timeout=10s --start-period=30s --retries=1 CMD "${PREFIX}/docker-healthcheck.sh"
 
 # entrypoint
-ENTRYPOINT ${PREFIX}/docker-entrypoint.sh /usr/sbin/cupsd -f
+ENTRYPOINT "${PREFIX}/docker-entrypoint.sh" /usr/sbin/cupsd -f
